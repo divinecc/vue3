@@ -15,8 +15,74 @@
       age: 18
     }
 
-  //模拟vue2中实现响应式dsfgsdfg
+    //模拟vue2中实现响应式
+    //#region
+    /*
+    let p = {}
+    Object.defineProperty(p, 'name', {
+      get() { //有人读取name时调用
+        return person.name
+      },
+      set(value) { //有人修改name时调用
+        console.log('有人修改了name属性，我发现了，我要去更新界面！');
+        person.name = value
+      }
+    })
+    Object.defineProperty(p, 'age', {
+      get() { //有人读取name时调用
+        return person.age
+      },
+      set(value) { //有人修改name时调用
+        console.log('有人修改了name属性，我发现了，我要去更新界面！');
+        person.age = value
+      }
+    })
+    */
+    //#unregion
 
+    //模拟vue3中实现响应式
+
+    const p = new Proxy(person, {
+      //读取p的某个属性时调用
+      get(target, propName) {
+        //这个target就是person,propName指的是属性名 p.***   ***就是哪个属性那么propName就是哪个属性
+        // console.log('有人读取了p身上的某个属性', target, propName);
+        console.log(`有人读取了p身上的${propName}属性`);
+        return Reflect.get(target, propName)
+      },
+      //修改p的某个属性、或给p追加某个属性时调用
+      set(target, propName, value) {
+        console.log(`有人修改了p身上的${propName}属性,我要去更新页面了`);
+        Reflect.set(target, propName, value)
+      },
+      //删除p的某个属性时调用
+      deleteProperty(target, propName) {
+        console.log(`有人删除了p身上的${propName}属性，我要去更新界面了！`);
+        return Reflect.deleteProperty(target, propName)
+      }
+    })
+
+
+
+    let obj = { a: 1, b: 2 }
+    //通过Object.defineProperty去操作
+    // Object.defineProperty(obj, 'c', {
+    //   get() {
+    //     return 3
+    //   }
+    // })
+
+    //通过Reflect.defineProperty去操作
+    Reflect.defineProperty(obj, 'c', {
+      get() {
+        return 3
+      }
+    })
+    Reflect.defineProperty(obj, 'c', {
+      get() {
+        return 4
+      }
+    })
   </script>
 </body>
 
